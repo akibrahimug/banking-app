@@ -7,17 +7,19 @@ export default function Home() {
   return (
     <section className="home">
       <div className="home-content">
-        <HeaderBox
-          type="greeting"
-          title="Welcome"
-          user={loggedIn?.firstName || "Guest"}
-          subtext="Access and manage your account and transcations easily"
-        />
-        <TotalBalanceBox
-          accounts={[]}
-          totalBanks={1}
-          totalCurrentBalance={5200.5}
-        />
+        <header className="home-header">
+          <HeaderBox
+            type="greeting"
+            title="Welcome"
+            user={loggedIn?.firstName || "Guest"}
+            subtext="Access and manage your account and transcations easily"
+          />
+          <TotalBalanceBox
+            accounts={[]}
+            totalBanks={1}
+            totalCurrentBalance={5200.5}
+          />
+        </header>
       </div>
     </section>
   );

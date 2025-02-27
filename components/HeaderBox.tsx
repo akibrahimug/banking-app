@@ -1,8 +1,11 @@
-import React from "react";
-
-function HeaderBox({ title = "title", type, user, subtext }: HeaderBoxProps) {
+const HeaderBox = ({
+  type = "title",
+  title,
+  subtext,
+  user,
+}: HeaderBoxProps) => {
   return (
-    <header className="header-box">
+    <div className="header-box">
       <h1 className="header-box-title">
         {title}
         {type === "greeting" && (
@@ -10,8 +13,8 @@ function HeaderBox({ title = "title", type, user, subtext }: HeaderBoxProps) {
         )}
       </h1>
       <p className="header-box-subtext">{subtext}</p>
-    </header>
+    </div>
   );
-}
+};
 
 export default HeaderBox;
