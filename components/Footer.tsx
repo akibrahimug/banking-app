@@ -6,11 +6,11 @@ import React from "react";
 
 const Footer = ({ user, type = "desktop" }: FooterProps) => {
   const router = useRouter();
-  const handleLogout = async () => {
-    const response = await logout();
-    if (response) {
-      router.push("/sign-in");
-    }
+
+  const handleLogOut = async () => {
+    const loggedOut = await logout();
+
+    if (loggedOut) router.push("/sign-in");
   };
   return (
     <footer className="footer">
@@ -25,7 +25,7 @@ const Footer = ({ user, type = "desktop" }: FooterProps) => {
           {user.email}
         </p>
       </div>
-      <div className="footer_image" onClick={handleLogout}>
+      <div className="footer_image" onClick={handleLogOut}>
         <Image
           src="/icons/logout.svg"
           alt="logout"
