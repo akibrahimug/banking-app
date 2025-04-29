@@ -212,7 +212,7 @@ export const exchangePublicToken = async ({
       accountId: accountData.account_id,
       accessToken,
       fundingSourceUrl,
-      sharableId: encryptId(accountData.account_id),
+      shareableId: encryptId(accountData.account_id),
     });
 
     // Revalidate the path to reflect the changes
@@ -436,7 +436,7 @@ export const exchangePublicToken = async ({
       accountId: accountData.account_id,
       accessToken,
       fundingSourceUrl,
-      sharableId: encryptId(accountData.account_id),
+      shareableId: encryptId(accountData.account_id),
     });
 
     // Revalidate the path to reflect the changes
@@ -477,7 +477,7 @@ export const createBankAccount = async ({
   accountId,
   bankId,
   fundingSourceUrl,
-  sharableId,
+  shareableId,
 }: createBankAccountProps) => {
   try {
     const { database } = await createAdminClient();
@@ -492,7 +492,7 @@ export const createBankAccount = async ({
         accountId,
         bankId,
         fundingSourceUrl,
-        sharableId,
+        shareableId,
       }
     );
 
@@ -739,7 +739,7 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
           type: accountData.type as string,
           subtype: accountData.subtype! as string,
           appwriteItemId: bank.$id,
-          sharableId: bank.sharableId,
+          shareableId: bank.shareableId,
         };
 
         return account;
@@ -1159,7 +1159,7 @@ const formSchema = z.object({
   name: z.string().min(4, "Transfer note is too short"),
   amount: z.string().min(4, "Amount is too short"),
   senderBank: z.string().min(4, "Please select a valid bank account"),
-  sharableId: z.string().min(8, "Please select a valid sharable Id"),
+  shareableId: z.string().min(8, "Please select a valid sharable Id"),
 });
 
 const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
@@ -1173,7 +1173,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
       email: "",
       amount: "",
       senderBank: "",
-      sharableId: "",
+      shareableId: "",
     },
   });
 
@@ -1181,7 +1181,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
     setIsLoading(true);
 
     try {
-      const receiverAccountId = decryptId(data.sharableId);
+      const receiverAccountId = decryptId(data.shareableId);
       const receiverBank = await getBankByAccountId({
         accountId: receiverAccountId,
       });
@@ -1318,7 +1318,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
 
         <FormField
           control={form.control}
-          name="sharableId"
+          name="shareableId"
           render={({ field }) => (
             <FormItem className="border-t border-gray-200">
               <div className="payment-transfer_form-item pb-5 pt-6">
