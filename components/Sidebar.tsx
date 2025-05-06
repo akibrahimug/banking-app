@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Footer from "./Footer";
-import PlaidLink from "./PlaidLink";
-
+import Footer from "@/components/Footer";
+import PlaidLink from "@/components/PlaidLink";
+import { Loader2 } from "lucide-react";
 const Sidebar = ({ user }: SiderbarProps) => {
   const pathname = usePathname();
 
