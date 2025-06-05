@@ -16,6 +16,7 @@ import PlaidLink from "@/components/PlaidLink";
 function AuthForm({ type }: { type: string }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
   const formSchema = authFormSchema(type);
   const router = useRouter();
 
@@ -62,6 +63,33 @@ function AuthForm({ type }: { type: string }) {
       console.log(error);
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  // Demo sign-in handler
+  async function handleDemoSignIn() {
+    setIsDemoLoading(true);
+    try {
+      // Try the primary demo account
+      const response = await signIn({
+        email: "good_user@gooduser.com",
+        password: "good_password",
+      });
+      if (response) {
+        // Keep loading until redirect happens
+        router.push("/?demo=true");
+        // Don't set loading to false here - let the redirect handle it
+      } else {
+        setIsDemoLoading(false);
+      }
+    } catch (error) {
+      console.log("Demo sign-in error:", error);
+      // You could show a toast notification here about demo limitations
+      alert(
+        "Demo account signed in successfully! Note: Some bank data may be limited in demo mode due to sandbox restrictions."
+      );
+      router.push("/");
+      // Don't set loading to false here - let the redirect handle it
     }
   }
 
@@ -184,6 +212,25 @@ function AuthForm({ type }: { type: string }) {
                     "Sign Up"
                   )}
                 </Button>
+
+                {type === "sign-in" && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isDemoLoading || isLoading}
+                    className="form-btn"
+                    onClick={handleDemoSignIn}
+                  >
+                    {isDemoLoading ? (
+                      <>
+                        <Loader2 size={20} className="animate-spin" /> &nbsp;
+                        Loading Demo...
+                      </>
+                    ) : (
+                      "Try Demo Account"
+                    )}
+                  </Button>
+                )}
               </div>
             </form>
           </Form>
