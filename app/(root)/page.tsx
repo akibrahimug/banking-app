@@ -2,22 +2,57 @@ import HeaderBox from "@/components/HeaderBox";
 import RecentTransactions from "@/components/RecentTransactions";
 import RightSidebar from "@/components/RightSidebar";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
+import ErrorState from "@/components/ErrorState";
 import { getAccount, getAccounts } from "@/lib/actions/bank.actions";
 import { getLoggedInUser } from "@/lib/actions/user.actions";
 
 const Home = async ({ searchParams: { id, page, demo } }: SearchParamProps) => {
   const currentPage = Number(page as string) || 1;
   const loggedIn = await getLoggedInUser();
-  const accounts = await getAccounts({
-    userId: loggedIn?.$id,
-  });
+  let accounts: any = null;
+  try {
+    accounts = await getAccounts({ userId: loggedIn?.$id });
+  } catch (e) {
+    return (
+      <section className="home">
+        <div className="home-content">
+          <ErrorState message="Failed to load accounts. Please try again." />
+        </div>
+      </section>
+    );
+  }
 
-  if (!accounts) return;
+  if (!accounts || !accounts.data?.length) {
+    return (
+      <section className="home">
+        <div className="home-content">
+          <HeaderBox
+            type="greeting"
+            title="Welcome"
+            user={loggedIn?.firstName || "Guest"}
+            subtext="Access and manage your account and transactions efficiently."
+          />
+          <ErrorState message="No accounts found. Please connect a bank and try again." />
+        </div>
+      </section>
+    );
+  }
 
   const accountsData = accounts?.data;
   const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
 
-  const account = await getAccount({ appwriteItemId });
+  let account: any = null;
+  try {
+    account = await getAccount({ appwriteItemId });
+  } catch (e) {
+    return (
+      <section className="home">
+        <div className="home-content">
+          <ErrorState message="Failed to load recent transactions." />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="home">
@@ -82,12 +117,16 @@ const Home = async ({ searchParams: { id, page, demo } }: SearchParamProps) => {
           />
         </header>
 
-        <RecentTransactions
-          accounts={accountsData}
-          transactions={account?.transactions}
-          appwriteItemId={appwriteItemId}
-          page={currentPage}
-        />
+        {account?.transactions?.length ? (
+          <RecentTransactions
+            accounts={accountsData}
+            transactions={account?.transactions}
+            appwriteItemId={appwriteItemId}
+            page={currentPage}
+          />
+        ) : (
+          <ErrorState message="No transactions available yet." />
+        )}
       </div>
 
       <RightSidebar

@@ -3,12 +3,40 @@ import HeaderBox from "@/components/HeaderBox";
 import { getAccounts } from "@/lib/actions/bank.actions";
 import { getLoggedInUser } from "@/lib/actions/user.actions";
 import React from "react";
+import ErrorState from "@/components/ErrorState";
 
 const MyBanks = async () => {
   const loggedIn = await getLoggedInUser();
-  const accounts = await getAccounts({
-    userId: loggedIn.$id,
-  });
+  let accounts: any = null;
+  try {
+    accounts = await getAccounts({ userId: loggedIn.$id });
+  } catch (e) {
+    return (
+      <section className="flex">
+        <div className="my-banks w-full">
+          <HeaderBox
+            title="My Bank Accounts"
+            subtext="Effortlessly manage your banking activites."
+          />
+          <ErrorState message="Failed to load your accounts." />
+        </div>
+      </section>
+    );
+  }
+
+  if (!accounts || !accounts.data?.length) {
+    return (
+      <section className="flex">
+        <div className="my-banks w-full">
+          <HeaderBox
+            title="My Bank Accounts"
+            subtext="Effortlessly manage your banking activites."
+          />
+          <ErrorState message="No bank accounts found. Connect a bank to continue." />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="flex">

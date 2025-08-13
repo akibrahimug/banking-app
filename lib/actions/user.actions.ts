@@ -114,6 +114,134 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
   }
 };
 
+// Ensure a demo user exists and is signed in
+export const ensureDemoUser = async () => {
+  const demoCredentials = {
+    email: "good_user@gooduser.com",
+    password: "good_password",
+  };
+
+  // Try to sign in
+  const existing = await signIn(demoCredentials);
+  if (existing) {
+    // Ensure at least one sandbox bank is linked
+    try {
+      // attempt to fetch banks; if none, link one via Plaid sandbox flow
+      const { getBanks } = await import("@/lib/actions/user.actions");
+      const banks = await getBanks({ userId: existing.$id });
+      if (!banks || banks.length === 0) {
+        // lazy import to avoid circulars at module top
+        const { plaidClient } = await import("@/lib/plaid");
+        const { addFundingSource } = await import("./dwolla.actions");
+        const { createBankAccount } = await import(
+          "@/lib/actions/user.actions"
+        );
+        const { encryptId } = await import("@/lib/utils");
+
+        const sandboxPublic = await plaidClient.sandboxPublicTokenCreate({
+          institution_id: "ins_109508",
+          initial_products: ["auth", "transactions", "identity"],
+        });
+
+        const exchange = await plaidClient.itemPublicTokenExchange({
+          public_token: sandboxPublic.data.public_token,
+        });
+
+        const accessToken = exchange.data.access_token;
+        const accountsResponse = await plaidClient.accountsGet({
+          access_token: accessToken,
+        });
+        const accountData = accountsResponse.data.accounts[0];
+        const processor = await plaidClient.processorTokenCreate({
+          access_token: accessToken,
+          account_id: accountData.account_id,
+          processor: "dwolla",
+        });
+        const processorToken = processor.data.processor_token;
+        const fundingSourceUrl = await addFundingSource({
+          dwollaCustomerId: existing.dwollaCustomerId,
+          processorToken,
+          bankName: accountData.name,
+        });
+        if (fundingSourceUrl) {
+          await createBankAccount({
+            userId: existing.$id,
+            bankId: exchange.data.item_id,
+            accountId: accountData.account_id,
+            accessToken,
+            fundingSourceUrl,
+            shareableId: encryptId(accountData.account_id),
+          });
+        }
+      }
+    } catch (err) {
+      console.log("ensureDemoUser: failed to ensure demo bank", err);
+    }
+    return existing;
+  }
+
+  // If sign-in failed, attempt to create and sign in
+  const demoUserData: SignUpParams = {
+    firstName: "Good",
+    lastName: "User",
+    address1: "123 Main St",
+    city: "New York",
+    state: "NY",
+    postalCode: "10001",
+    dateOfBirth: "1990-01-01",
+    ssn: "1234",
+    email: demoCredentials.email,
+    password: demoCredentials.password,
+  };
+
+  const created = await signUp(demoUserData);
+  try {
+    if (created) {
+      const { plaidClient } = await import("@/lib/plaid");
+      const { addFundingSource } = await import("./dwolla.actions");
+      const { createBankAccount } = await import("@/lib/actions/user.actions");
+      const { encryptId } = await import("@/lib/utils");
+
+      const sandboxPublic = await plaidClient.sandboxPublicTokenCreate({
+        institution_id: "ins_109508",
+        initial_products: ["auth", "transactions", "identity"],
+      });
+      const exchange = await plaidClient.itemPublicTokenExchange({
+        public_token: sandboxPublic.data.public_token,
+      });
+      const accessToken = exchange.data.access_token;
+      const accountsResponse = await plaidClient.accountsGet({
+        access_token: accessToken,
+      });
+      const accountData = accountsResponse.data.accounts[0];
+      const processor = await plaidClient.processorTokenCreate({
+        access_token: accessToken,
+        account_id: accountData.account_id,
+        processor: "dwolla",
+      });
+      const processorToken = processor.data.processor_token;
+      const fundingSourceUrl = await addFundingSource({
+        dwollaCustomerId: created.dwollaCustomerId,
+        processorToken,
+        bankName: accountData.name,
+      });
+      if (fundingSourceUrl) {
+        await createBankAccount({
+          userId: created.$id,
+          bankId: exchange.data.item_id,
+          accountId: accountData.account_id,
+          accessToken,
+          fundingSourceUrl,
+          shareableId: encryptId(accountData.account_id),
+        });
+      }
+    }
+  } catch (err) {
+    console.log("ensureDemoUser (created): failed to ensure demo bank", err);
+  }
+  return created;
+};
+
 export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();

@@ -46,11 +46,33 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
 
   const { open, ready } = usePlaidLink(config);
 
+  const showPlaidSandboxAlert = () => {
+    const lines = [
+      "Plaid Sandbox Helper",
+      "",
+      "Use these credentials in the Plaid popup:",
+      "Institution: First Platypus Bank",
+      "Username: user_good",
+      "Password: pass_good",
+      "MFA (if asked): 1234 or 123456",
+      "",
+      "You can leave other non-required fields empty and continue.",
+    ];
+    if (typeof window !== "undefined") {
+      window.alert(lines.join("\n"));
+    }
+  };
+
+  const handleOpen = () => {
+    showPlaidSandboxAlert();
+    open();
+  };
+
   return (
     <>
       {variant === "primary" ? (
         <Button
-          onClick={() => open()}
+          onClick={handleOpen}
           disabled={!ready}
           className="plaidlink-primary"
         >
@@ -58,7 +80,7 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
         </Button>
       ) : variant === "ghost" ? (
         <Button
-          onClick={() => open()}
+          onClick={handleOpen}
           variant="ghost"
           className="plaidlink-ghost"
         >
@@ -73,7 +95,7 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
           </p>
         </Button>
       ) : (
-        <Button onClick={() => open()} className="plaidlink-default">
+        <Button onClick={handleOpen} className="plaidlink-default">
           <Image
             src="/icons/connect-bank.svg"
             alt="connect bank"
@@ -85,6 +107,7 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
           </p>
         </Button>
       )}
+      {null}
     </>
   );
 };

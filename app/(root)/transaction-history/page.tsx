@@ -5,33 +5,90 @@ import { getAccount, getAccounts } from "@/lib/actions/bank.actions";
 import { getLoggedInUser } from "@/lib/actions/user.actions";
 import { formatAmount } from "@/lib/utils";
 import React from "react";
+import ErrorState from "@/components/ErrorState";
 
 const TransactionHistory = async ({
   searchParams: { id, page },
 }: SearchParamProps) => {
   const currentPage = Number(page as string) || 1;
   const loggedIn = await getLoggedInUser();
-  const accounts = await getAccounts({
-    userId: loggedIn.$id,
-  });
+  let accounts: any = null;
+  try {
+    accounts = await getAccounts({ userId: loggedIn.$id });
+  } catch (e) {
+    return (
+      <div className="transactions">
+        <div className="transactions-header">
+          <HeaderBox
+            title="Transaction History"
+            subtext="See your bank details and transactions."
+          />
+        </div>
+        <ErrorState message="Failed to load accounts." />
+      </div>
+    );
+  }
 
-  if (!accounts) return;
+  if (!accounts || !accounts.data?.length) {
+    return (
+      <div className="transactions">
+        <div className="transactions-header">
+          <HeaderBox
+            title="Transaction History"
+            subtext="See your bank details and transactions."
+          />
+        </div>
+        <ErrorState message="No accounts found. Connect a bank to view transactions." />
+      </div>
+    );
+  }
 
   const accountsData = accounts?.data;
   const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
 
-  const account = await getAccount({ appwriteItemId });
+  let account: any = null;
+  try {
+    account = await getAccount({ appwriteItemId });
+  } catch (e) {
+    return (
+      <div className="transactions">
+        <div className="transactions-header">
+          <HeaderBox
+            title="Transaction History"
+            subtext="See your bank details and transactions."
+          />
+        </div>
+        <ErrorState message="Failed to load account details." />
+      </div>
+    );
+  }
 
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(account?.transactions.length / rowsPerPage);
+  const totalPages = Math.ceil(
+    (account?.transactions?.length || 0) / rowsPerPage
+  );
 
   const indexOfLastTransaction = currentPage * rowsPerPage;
   const indexOfFirstTransaction = indexOfLastTransaction - rowsPerPage;
 
-  const currentTransactions = account?.transactions.slice(
+  const currentTransactions = (account?.transactions || []).slice(
     indexOfFirstTransaction,
     indexOfLastTransaction
   );
+
+  if (!currentTransactions.length) {
+    return (
+      <div className="transactions">
+        <div className="transactions-header">
+          <HeaderBox
+            title="Transaction History"
+            subtext="See your bank details and transactions."
+          />
+        </div>
+        <ErrorState message="No transactions available yet." />
+      </div>
+    );
+  }
   return (
     <div className="transactions">
       <div className="transactions-header">

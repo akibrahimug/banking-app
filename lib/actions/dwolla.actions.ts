@@ -35,6 +35,16 @@ export const createFundingSource = async (
       })
       .then((res) => res.headers.get("location"));
   } catch (err) {
+    // Gracefully handle duplicate funding source by returning existing URL
+    const anyErr: any = err;
+    try {
+      const body = anyErr?.body || anyErr;
+      const code = body?.code || body?.data?.code;
+      const existingHref = body?._links?.about?.href;
+      if (code === "DuplicateResource" && existingHref) {
+        return existingHref;
+      }
+    } catch {}
     console.error("Creating a Funding Source Failed: ", err);
   }
 };
