@@ -232,7 +232,20 @@
   }
 
   .recent-transactions-tablist {
-    @apply mb-8 flex w-full items-center justify-between gap-4 rounded-2xl bg-muted/40 p-2;
+    @apply mb-8 flex w-full items-center justify-start gap-4 rounded-2xl bg-muted/40 p-2 overflow-x-auto flex-nowrap scroll-smooth;
+  }
+  .recent-transactions-tablist::-webkit-scrollbar {
+    height: 10px;
+  }
+  .recent-transactions-tablist::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .recent-transactions-tablist::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #7c3aed 0%, #ec4899 100%);
+    border-radius: 9999px;
+  }
+  .recent-transactions-tablist::-webkit-scrollbar-thumb:hover {
+    filter: brightness(1.1);
   }
 
   /* Right sidebar */
