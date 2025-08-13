@@ -96,6 +96,7 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
         userId: newUserAccount.$id,
         dwollaCustomerId,
         dwollaCustomerUrl,
+        earnInterestEnabled: false,
       }
     );
 
@@ -118,7 +119,7 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
 export const ensureDemoUser = async () => {
   const demoCredentials = {
     email: "good_user@gooduser.com",
-    password: "good_password",
+    password: "good_user",
   };
 
   // Try to sign in
@@ -264,6 +265,36 @@ export const logoutAccount = async () => {
 
     await account.deleteSession("current");
   } catch (error) {
+    return null;
+  }
+};
+
+export const setInterestEnrollment = async ({
+  userId,
+  enrolled,
+}: {
+  userId: string;
+  enrolled: boolean;
+}) => {
+  try {
+    const { database } = await createAdminClient();
+    const userList = await database.listDocuments(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,
+      [Query.equal("userId", [userId])]
+    );
+    const doc = userList.documents?.[0];
+    if (!doc) return null;
+    const updated = await database.updateDocument(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,
+      doc.$id,
+      { earnInterestEnabled: enrolled }
+    );
+    revalidatePath("/");
+    return parseStringify(updated);
+  } catch (error) {
+    console.log(error);
     return null;
   }
 };

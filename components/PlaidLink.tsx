@@ -11,6 +11,7 @@ import {
   exchangePublicToken,
 } from "@/lib/actions/user.actions";
 import Image from "next/image";
+import GradientIcon from "@/components/GradientIcon";
 
 const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
   const router = useRouter();
@@ -84,25 +85,29 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
           variant="ghost"
           className="plaidlink-ghost"
         >
-          <Image
+          <GradientIcon
             src="/icons/connect-bank.svg"
-            alt="connect bank"
-            width={24}
-            height={24}
+            size={20}
+            gradientCss="bg-[linear-gradient(90deg,#22D3EE_0%,#60A5FA_100%)]"
+            activeGradientCss="bg-[linear-gradient(90deg,#67E8F9_0%,#93C5FD_100%)]"
           />
-          <p className="hiddenl text-[16px] font-semibold text-black-2 xl:block">
+          <p className="hiddenl text-[16px] font-semibold text-foreground xl:block">
             Connect bank
           </p>
         </Button>
       ) : (
-        <Button onClick={handleOpen} className="plaidlink-default">
-          <Image
+        <Button
+          onClick={handleOpen}
+          variant="outline"
+          className="plaidlink-default"
+        >
+          <GradientIcon
             src="/icons/connect-bank.svg"
-            alt="connect bank"
-            width={24}
-            height={24}
+            size={20}
+            gradientCss="bg-[linear-gradient(90deg,#22D3EE_0%,#60A5FA_100%)]"
+            activeGradientCss="bg-[linear-gradient(90deg,#67E8F9_0%,#93C5FD_100%)]"
           />
-          <p className="text-[16px] font-semibold text-black-2 sidebar-label">
+          <p className="text-[16px] font-semibold sidebar-label text-accent-foreground">
             Connect bank
           </p>
         </Button>

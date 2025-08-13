@@ -4,65 +4,74 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    --background: 300 10% 98%;
+    --foreground: 277 47% 10%;
 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+    --muted: 292 24% 94%;
+    --muted-foreground: 277 20% 45%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover-foreground: 277 47% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 277 47% 10%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 221.2 83.2% 53.3%;
+    --border: 286 22% 85%;
+    --input: 286 22% 85%;
+    --ring: 284 60% 50%;
 
-    --primary: 221.2 83.2% 53.3%; /* brand blue aligned with bankGradient */
-    --primary-foreground: 210 40% 98%;
+    --primary: 284 60% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220 13% 20%;
+    --secondary: 292 24% 94%;
+    --secondary-foreground: 277 47% 15%;
 
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 224 71.4% 4.1%;
+    --accent: 319 85% 62%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 355 77% 62%;
+    --destructive-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --radius: 0.9rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 283 34% 8%;
+    --foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 283 24% 14%;
+    --muted-foreground: 277 12% 70%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 283 34% 8%;
+    --popover-foreground: 0 0% 100%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 283 34% 8%;
+    --card-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 221.2 83.2% 53.3%;
+    --border: 284 18% 22%;
+    --input: 284 18% 22%;
+    --ring: 284 64% 56%;
 
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 284 64% 56%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 283 24% 16%;
+    --secondary-foreground: 0 0% 100%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 319 86% 62%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 355 71% 55%;
+    --destructive-foreground: 0 0% 100%;
+  }
+
+  /* Invested theme overrides */
+  .invested {
+    --primary: 142 72% 35%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 44 96% 50%;
+    --accent-foreground: 0 0% 12%;
+    --ring: 142 72% 40%;
   }
 }
 
@@ -211,7 +220,7 @@
   }
 
   .view-all-btn {
-    @apply text-14 rounded-lg border border-gray-300 px-4 py-2.5 font-semibold text-gray-700;
+    @apply text-14 rounded-full border border-primary/40 px-4 py-2.5 font-semibold text-primary bg-primary/5;
   }
 
   .recent-transactions {
@@ -223,7 +232,7 @@
   }
 
   .recent-transactions-tablist {
-    @apply custom-scrollbar mb-8 flex mx-2 flex-nowrap;
+    @apply mb-8 flex w-full items-center justify-between gap-4 rounded-2xl bg-muted/40 p-2;
   }
 
   /* Right sidebar */
@@ -274,11 +283,11 @@
   }
 
   .transactions-account {
-    @apply flex flex-col justify-between gap-4 rounded-lg border-y bg-blue-600 px-4 py-5 md:flex-row;
+    @apply flex flex-col justify-between gap-4 rounded-2xl border-y bg-blue-600 px-4 py-5 md:flex-row;
   }
 
   .transactions-account-balance {
-    @apply flex-center flex-col  gap-2 rounded-md bg-blue-25/20 px-4 py-2 text-white;
+    @apply flex-center flex-col  gap-2 rounded-lg bg-white/15 px-4 py-2 text-white;
   }
 
   .header-box {
@@ -317,7 +326,7 @@
   }
 
   .banktab-item {
-    @apply gap-[18px] border-b-2 flex px-2 sm:px-4 py-2 transition-all;
+    @apply flex w-full items-center justify-center gap-[12px] rounded-xl px-4 sm:px-6 py-3 transition-all;
   }
 
   /* Mobile nav */
@@ -349,7 +358,16 @@
 
   /* Auth Form */
   .auth-form {
-    @apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-5 py-10 md:gap-8;
+    @apply flex w-full max-w-[420px] flex-col gap-5 py-6 md:gap-8;
+  }
+
+  /* New centered auth page styles */
+  .auth-page {
+    @apply flex w-full min-h-screen items-center justify-center bg-auth-gradient p-6;
+  }
+
+  .auth-card {
+    @apply w-full max-w-[460px] rounded-2xl border border-border/60 bg-card/80 backdrop-blur-md shadow-xl p-6 sm:p-8;
   }
 
   .form-item {
@@ -369,7 +387,7 @@
   }
 
   .form-link {
-    @apply text-14 cursor-pointer font-medium text-bankGradient;
+    @apply text-14 cursor-pointer font-medium text-accent;
   }
 
   /* Payment Transfer */
@@ -399,7 +417,7 @@
 
   /* Root Layout */
   .root-layout {
-    @apply flex h-16 items-center justify-between p-5 shadow-creditCard sm:p-8 md:hidden;
+    @apply flex h-16 items-center justify-between p-5 shadow-creditCard sm:p-8 md:hidden bg-gradient-mesh text-foreground;
   }
 
   /* Bank Info */
@@ -434,11 +452,11 @@
 
   /* Sidebar */
   .sidebar {
-    @apply sticky left-0 top-0 flex h-screen w-fit flex-col  justify-between border-r border-gray-200 bg-white pt-8 text-white max-md:hidden sm:p-4 xl:p-6 2xl:w-[355px];
+    @apply sticky left-0 top-0 flex h-screen w-fit flex-col  justify-between border-r border-border bg-background/70 backdrop-blur pt-8 text-foreground max-md:hidden sm:p-4 xl:p-6 2xl:w-[355px];
   }
 
   .sidebar-logo {
-    @apply 2xl:text-26 font-ibm-plex-serif text-[26px] font-bold text-black-1 max-xl:hidden;
+    @apply 2xl:text-26 font-ibm-plex-serif text-[26px] font-bold text-primary max-xl:hidden;
   }
 
   .sidebar-link {

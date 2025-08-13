@@ -3,7 +3,7 @@ import AuthForm from "@/components/AuthForm";
 
 vi.mock("@/lib/actions/user.actions", () => ({
   signIn: vi.fn(async ({ email, password }) => {
-    if (email === "good_user@gooduser.com" && password === "good_password") {
+    if (email === "good_user@gooduser.com" && password === "good_user") {
       return { $id: "demo-user-id", firstName: "Good", lastName: "User" };
     }
     return { $id: "user-id", firstName: "Jane", lastName: "Doe" };

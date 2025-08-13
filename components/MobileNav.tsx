@@ -9,9 +9,11 @@ import {
 import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import GradientIcon from "@/components/GradientIcon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Footer from "@/components/Footer";
+import TextLogo from "@/components/TextLogo";
 const MobileNav = ({ user }: MobileNavProps) => {
   const pathname = usePathname();
 
@@ -24,27 +26,24 @@ const MobileNav = ({ user }: MobileNavProps) => {
             width={30}
             height={30}
             alt="menu"
-            className="cursor-pointer"
+            className="cursor-pointer invert brightness-200 drop-shadow"
           />
         </SheetTrigger>
-        <SheetContent side="left" className="border-none bg-white">
-          <Link
-            href="/"
+        <SheetContent
+          side="left"
+          className="border-border bg-background text-foreground"
+        >
+          <button
+            type="button"
+            onClick={() => window.history.back()}
             className="cursor-pointer flex items-center gap-1 px-4"
+            aria-label="Go back"
           >
-            <Image
-              src="/icons/logo.svg"
-              width={34}
-              height={34}
-              alt="Horizon logo"
-            />
-            <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">
-              Horizon
-            </h1>
-          </Link>
+            <TextLogo size="md" />
+          </button>
           <div className="mobilenav-sheet">
             <SheetClose asChild>
-              <nav className="flex h-full flex-col gap-6 pt-16 text-white">
+              <nav className="flex h-full flex-col gap-6 pt-16 text-foreground">
                 {sidebarLinks.map((item) => {
                   const isActive =
                     pathname === item.route ||
@@ -56,22 +55,23 @@ const MobileNav = ({ user }: MobileNavProps) => {
                         href={item.route}
                         key={item.label}
                         className={cn("mobilenav-sheet_close w-full", {
-                          "bg-bank-gradient": isActive,
+                          "bg-bank-gradient text-white": isActive,
                         })}
                       >
-                        <Image
+                        <GradientIcon
                           src={item.imgURL}
-                          alt={item.label}
-                          width={20}
-                          height={20}
-                          className={cn({
-                            "brightness-[3] invert-0": isActive,
-                          })}
+                          size={20}
+                          active={isActive}
+                          gradientCss={item.gradient}
+                          activeGradientCss={item.activeGradient}
                         />
                         <p
-                          className={cn("text-16 font-semibold text-black-2", {
-                            "text-white": isActive,
-                          })}
+                          className={cn(
+                            "text-16 font-semibold text-foreground",
+                            {
+                              "text-white": isActive,
+                            }
+                          )}
                         >
                           {item.label}
                         </p>
@@ -79,7 +79,6 @@ const MobileNav = ({ user }: MobileNavProps) => {
                     </SheetClose>
                   );
                 })}
-                USER
               </nav>
             </SheetClose>
             <Footer user={user} type="mobile" />

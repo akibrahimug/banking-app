@@ -1,6 +1,9 @@
 import HeaderBox from "@/components/HeaderBox";
 import RecentTransactions from "@/components/RecentTransactions";
 import RightSidebar from "@/components/RightSidebar";
+import Promotions from "@/components/Promotions";
+import SpendingByCategoryChart from "@/components/SpendingByCategoryChart";
+import BalanceTrendChart from "@/components/BalanceTrendChart";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
 import ErrorState from "@/components/ErrorState";
 import { getAccount, getAccounts } from "@/lib/actions/bank.actions";
@@ -117,16 +120,29 @@ const Home = async ({ searchParams: { id, page, demo } }: SearchParamProps) => {
           />
         </header>
 
-        {account?.transactions?.length ? (
-          <RecentTransactions
-            accounts={accountsData}
-            transactions={account?.transactions}
-            appwriteItemId={appwriteItemId}
-            page={currentPage}
-          />
-        ) : (
-          <ErrorState message="No transactions available yet." />
-        )}
+        <div className="mt-6 grid grid-cols-1 gap-6">
+          <div className="space-y-6">
+            <Promotions user={loggedIn} />
+            {account?.transactions?.length ? (
+              <>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <SpendingByCategoryChart
+                    transactions={account.transactions}
+                  />
+                  <BalanceTrendChart transactions={account.transactions} />
+                </div>
+                <RecentTransactions
+                  accounts={accountsData}
+                  transactions={account.transactions}
+                  appwriteItemId={appwriteItemId}
+                  page={currentPage}
+                />
+              </>
+            ) : (
+              <ErrorState message="No transactions available yet." />
+            )}
+          </div>
+        </div>
       </div>
 
       <RightSidebar

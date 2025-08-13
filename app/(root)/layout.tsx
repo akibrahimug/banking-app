@@ -1,8 +1,8 @@
 import MobileNav from "@/components/MobileNav";
 import Sidebar from "@/components/Sidebar";
-import Image from "next/image";
 import { getLoggedInUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
+import BackLogo from "@/components/BackLogo";
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -18,7 +18,7 @@ export default async function RootLayout({
 
       <div className="flex size-full flex-col">
         <div className="root-layout">
-          <Image src="/icons/logo.svg" width={30} height={30} alt="logo" />
+          <BackLogo className="max-md:opacity-90" />
           <div>
             <MobileNav user={loggedIn} />
           </div>

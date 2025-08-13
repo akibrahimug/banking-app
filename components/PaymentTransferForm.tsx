@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import TransferVerification from "@/components/TransferVerification";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -49,6 +50,10 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
     },
   });
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingReceiver, setPendingReceiver] = useState<any>(null);
+  const [pendingSender, setPendingSender] = useState<any>(null);
+
   const submit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
 
@@ -57,35 +62,12 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
       const receiverBank = await getBankByAccountId({
         accountId: receiverAccountId,
       });
-      const senderBank = await getBank({ documentId: data.senderBank });
+      const senderAccount =
+        accounts.find((a) => a.appwriteItemId === data.senderBank) || null;
 
-      const transferParams = {
-        sourceFundingSourceUrl: senderBank.fundingSourceUrl,
-        destinationFundingSourceUrl: receiverBank.fundingSourceUrl,
-        amount: data.amount,
-      };
-      // create transfer
-      const transfer = await createTransfer(transferParams);
-
-      // create transfer transaction
-      if (transfer) {
-        const transaction = {
-          name: data.name,
-          amount: data.amount,
-          senderId: senderBank.userId.$id,
-          senderBankId: senderBank.$id,
-          receiverId: receiverBank.userId.$id,
-          receiverBankId: receiverBank.$id,
-          email: data.email,
-        };
-
-        const newTransaction = await createTransaction(transaction);
-
-        if (newTransaction) {
-          form.reset();
-          router.push("/");
-        }
-      }
+      setPendingReceiver(receiverBank);
+      setPendingSender(senderAccount);
+      setConfirmOpen(true);
     } catch (error) {
       console.error("Submitting create transfer request failed: ", error);
     }
@@ -100,13 +82,13 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
           control={form.control}
           name="senderBank"
           render={() => (
-            <FormItem className="border-t border-gray-200">
+            <FormItem className="border-t border-border">
               <div className="payment-transfer_form-item pb-6 pt-5">
                 <div className="payment-transfer_form-content">
                   <FormLabel className="text-14 font-medium text-gray-700">
                     Select Source Bank
                   </FormLabel>
-                  <FormDescription className="text-12 font-normal text-gray-600">
+                  <FormDescription className="text-12 font-normal text-muted-foreground">
                     Select the bank account you want to transfer funds from
                   </FormDescription>
                 </div>
@@ -129,13 +111,13 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="border-t border-gray-200">
+            <FormItem className="border-t border-border">
               <div className="payment-transfer_form-item pb-6 pt-5">
                 <div className="payment-transfer_form-content">
                   <FormLabel className="text-14 font-medium text-gray-700">
                     Transfer Note (Optional)
                   </FormLabel>
-                  <FormDescription className="text-12 font-normal text-gray-600">
+                  <FormDescription className="text-12 font-normal text-muted-foreground">
                     Please provide any additional information or instructions
                     related to the transfer
                   </FormDescription>
@@ -156,10 +138,10 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
         />
 
         <div className="payment-transfer_form-details">
-          <h2 className="text-18 font-semibold text-gray-900">
+          <h2 className="text-18 font-semibold text-foreground">
             Bank account details
           </h2>
-          <p className="text-16 font-normal text-gray-600">
+          <p className="text-16 font-normal text-muted-foreground">
             Enter the bank account details of the recipient
           </p>
         </div>
@@ -168,7 +150,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="border-t border-gray-200">
+            <FormItem className="border-t border-border">
               <div className="payment-transfer_form-item py-5">
                 <FormLabel className="text-14 w-full max-w-[280px] font-medium text-gray-700">
                   Recipient&apos;s Email Address
@@ -192,7 +174,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
           control={form.control}
           name="sharableId"
           render={({ field }) => (
-            <FormItem className="border-t border-gray-200">
+            <FormItem className="border-t border-border">
               <div className="payment-transfer_form-item pb-5 pt-6">
                 <FormLabel className="text-14 w-full max-w-[280px] font-medium text-gray-700">
                   Receiver&apos;s Plaid Sharable Id
@@ -216,7 +198,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
           control={form.control}
           name="amount"
           render={({ field }) => (
-            <FormItem className="border-y border-gray-200">
+            <FormItem className="border-y border-border">
               <div className="payment-transfer_form-item py-5">
                 <FormLabel className="text-14 w-full max-w-[280px] font-medium text-gray-700">
                   Amount
@@ -248,6 +230,42 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
           </Button>
         </div>
       </form>
+      <TransferVerification
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        senderBank={pendingSender || undefined}
+        receiverBank={pendingReceiver || undefined}
+        amount={form.getValues("amount")}
+        note={form.getValues("name")}
+        onConfirm={async () => {
+          const data = form.getValues();
+          if (!pendingReceiver || !pendingSender) return;
+          const senderBankDoc = await getBank({ documentId: data.senderBank });
+          const transferParams = {
+            sourceFundingSourceUrl: senderBankDoc.fundingSourceUrl,
+            destinationFundingSourceUrl: pendingReceiver.fundingSourceUrl,
+            amount: data.amount,
+          };
+          const transfer = await createTransfer(transferParams);
+          if (transfer) {
+            const transaction = {
+              name: data.name,
+              amount: data.amount,
+              senderId: senderBankDoc.userId.$id,
+              senderBankId: senderBankDoc.$id,
+              receiverId: pendingReceiver.userId.$id,
+              receiverBankId: pendingReceiver.$id,
+              email: data.email,
+            };
+            const newTransaction = await createTransaction(transaction);
+            if (newTransaction) {
+              form.reset();
+              setConfirmOpen(false);
+              router.push("/");
+            }
+          }
+        }}
+      />
     </Form>
   );
 };

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -13,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/actions/user.actions";
 import PlaidLink from "@/components/PlaidLink";
+import TextLogo from "@/components/TextLogo";
 function AuthForm({ type }: { type: string }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +73,7 @@ function AuthForm({ type }: { type: string }) {
       // Try the primary demo account
       const response = await signIn({
         email: "good_user@gooduser.com",
-        password: "good_password",
+        password: "good_user",
       });
       if (response) {
         // Keep loading until redirect happens
@@ -96,21 +96,18 @@ function AuthForm({ type }: { type: string }) {
   return (
     <section className="auth-form">
       <header className="flex flex-col gap-5 md:gap-8">
-        <Link href="/" className="cursor-pointer flex items-center gap-1 px-4">
-          <Image
-            src="/icons/logo.svg"
-            width={34}
-            height={34}
-            alt="Horizon logo"
-          />
-          <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">
-            Pesa
-          </h1>
-        </Link>
+        <button
+          type="button"
+          onClick={() => window.history.back()}
+          className="cursor-pointer flex items-center gap-1 px-4"
+          aria-label="Go back"
+        >
+          <TextLogo size="md" />
+        </button>
         <div className="flex flex-col gap-1 md:gap-3">
-          <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
+          <h1 className="text-24 lg:text-36 font-semibold text-foreground">
             {user ? "Link Account" : type === "sign-in" ? "Sign In" : "Sign Up"}
-            <p className="text-16 font-normal text-gray-600">
+            <p className="text-16 font-normal text-muted-foreground">
               {user
                 ? "Link your account to get started"
                 : "Please enter your details"}

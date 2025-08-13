@@ -6,7 +6,7 @@ async function SignIn() {
   // Pre-warm demo account so users always have working credentials
   await ensureDemoUser();
   return (
-    <section className="flex-center size-full max-sm:px-6">
+    <section className="w-full max-sm:px-6">
       <AuthForm type="sign-in" />
     </section>
   );

@@ -56,54 +56,44 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
 
-        // Existing brand palette retained
-        fill: {
-          1: "rgba(255, 255, 255, 0.10)",
-        },
-        bankGradient: "#0179FE",
-        indigo: {
-          500: "#6172F3",
-          700: "#3538CD",
-        },
+        // New brand palette
+        fill: { 1: "rgba(255,255,255,0.08)" },
+        bankGradient: "#7C3AED", // violet-600 base for legacy gradient uses
+        indigo: { 500: "#7C3AED", 700: "#5B21B6" },
         success: {
-          25: "#F6FEF9",
-          50: "#ECFDF3",
-          100: "#D1FADF",
-          600: "#039855",
-          700: "#027A48",
-          900: "#054F31",
+          25: "#F5FEFB",
+          50: "#E9FBF5",
+          100: "#CFF3E6",
+          600: "#0E9F6E",
+          700: "#057A55",
+          900: "#044A2A",
         },
         pink: {
-          25: "#FEF6FB",
-          100: "#FCE7F6",
-          500: "#EE46BC",
-          600: "#DD2590",
-          700: "#C11574",
-          900: "#851651",
+          25: "#FFF5FA",
+          100: "#FEE5F2",
+          500: "#F472B6",
+          600: "#EC4899",
+          700: "#DB2777",
+          900: "#9D174D",
         },
         blue: {
-          25: "#F5FAFF",
-          100: "#D1E9FF",
-          500: "#2E90FA",
-          600: "#1570EF",
-          700: "#175CD3",
-          900: "#194185",
+          25: "#F6F5FF",
+          100: "#EDE9FE",
+          500: "#8B5CF6",
+          600: "#7C3AED",
+          700: "#6D28D9",
+          900: "#4C1D95",
         },
-        sky: {
-          1: "#F3F9FF",
-        },
-        black: {
-          1: "#00214F",
-          2: "#344054",
-        },
+        sky: { 1: "#F9F7FF" },
+        black: { 1: "#0F1020", 2: "#2A2A3C" },
         gray: {
-          25: "#FCFCFD",
-          200: "#EAECF0",
-          300: "#D0D5DD",
-          500: "#667085",
-          600: "#475467",
-          700: "#344054",
-          900: "#101828",
+          25: "#FAFAFB",
+          200: "#E7E3EE",
+          300: "#D6D0E1",
+          500: "#8B89A6",
+          600: "#6D6A86",
+          700: "#4D4B66",
+          900: "#1E1B2E",
         },
       },
       borderRadius: {
@@ -112,10 +102,13 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        "bank-gradient": "linear-gradient(90deg, #0179FE 0%, #4893FF 100%)",
-        "gradient-mesh": "url('/icons/gradient-mesh.svg')",
+        "bank-gradient": "linear-gradient(90deg, #7C3AED 0%, #EC4899 100%)",
+        "gradient-mesh":
+          "linear-gradient(135deg, #0F1020 0%, #3B1D60 50%, #7C3AED 100%)",
         "bank-green-gradient":
-          "linear-gradient(90deg, #01797A 0%, #489399 100%)",
+          "linear-gradient(90deg, #7C3AED 0%, #22C55E 100%)",
+        "auth-gradient":
+          "radial-gradient(1200px 600px at 20% 20%, rgba(124,58,237,0.45), transparent 60%), radial-gradient(900px 500px at 80% 70%, rgba(168,85,247,0.6), transparent 65%), linear-gradient(135deg, #0F1020 0%, #3B1D60 50%, #7C3AED 100%)",
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgba(16, 24, 40, 0.05)",

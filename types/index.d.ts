@@ -40,6 +40,7 @@ declare type User = {
   postalCode: string;
   dateOfBirth: string;
   ssn: string;
+  earnInterestEnabled?: boolean;
 };
 
 declare type NewUserParams = {
@@ -254,6 +255,18 @@ declare interface DoughnutChartProps {
 
 declare interface PaymentTransferFormProps {
   accounts: Account[];
+}
+declare interface SpendingByCategoryChartProps {
+  transactions: Transaction[];
+}
+
+declare interface CreateCardApplicationProps {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  income: number;
+  consent: boolean;
 }
 
 // Actions

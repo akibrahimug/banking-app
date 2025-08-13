@@ -21,7 +21,7 @@ export default function NoDataSkeleton({
 
   if (variant === "table") {
     return (
-      <div className="w-full overflow-hidden rounded-lg border border-gray-200">
+      <div className="w-full overflow-hidden rounded-lg border border-border">
         <div className="flex items-center justify-between p-4">
           <Skeleton className="h-6 w-40" />
           <Skeleton className="h-9 w-24 rounded-md" />
