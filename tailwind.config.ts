@@ -56,59 +56,25 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
 
-        // New brand palette
-        fill: { 1: "rgba(255,255,255,0.08)" },
-        bankGradient: "#7C3AED", // violet-600 base for legacy gradient uses
-        indigo: { 500: "#7C3AED", 700: "#5B21B6" },
-        success: {
-          25: "#F5FEFB",
-          50: "#E9FBF5",
-          100: "#CFF3E6",
-          600: "#0E9F6E",
-          700: "#057A55",
-          900: "#044A2A",
-        },
-        pink: {
-          25: "#FFF5FA",
-          100: "#FEE5F2",
-          500: "#F472B6",
-          600: "#EC4899",
-          700: "#DB2777",
-          900: "#9D174D",
-        },
-        blue: {
-          25: "#F6F5FF",
-          100: "#EDE9FE",
-          500: "#8B5CF6",
-          600: "#7C3AED",
-          700: "#6D28D9",
-          900: "#4C1D95",
-        },
-        sky: { 1: "#F9F7FF" },
-        black: { 1: "#0F1020", 2: "#2A2A3C" },
-        gray: {
-          25: "#FAFAFB",
-          200: "#E7E3EE",
-          300: "#D6D0E1",
-          500: "#8B89A6",
-          600: "#6D6A86",
-          700: "#4D4B66",
-          900: "#1E1B2E",
+        // Minimalist palette
+        neutral: {
+          50: "hsl(0, 0%, 98%)",
+          100: "hsl(0, 0%, 96%)",
+          200: "hsl(0, 0%, 90%)",
+          300: "hsl(0, 0%, 85%)",
+          400: "hsl(0, 0%, 60%)",
+          500: "hsl(0, 0%, 45%)",
+          600: "hsl(0, 0%, 30%)",
+          700: "hsl(0, 0%, 20%)",
+          800: "hsl(0, 0%, 15%)",
+          900: "hsl(0, 0%, 10%)",
+          950: "hsl(0, 0%, 4%)",
         },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-      },
-      backgroundImage: {
-        "bank-gradient": "linear-gradient(90deg, #7C3AED 0%, #EC4899 100%)",
-        "gradient-mesh":
-          "linear-gradient(135deg, #0F1020 0%, #3B1D60 50%, #7C3AED 100%)",
-        "bank-green-gradient":
-          "linear-gradient(90deg, #7C3AED 0%, #22C55E 100%)",
-        "auth-gradient":
-          "radial-gradient(1200px 600px at 20% 20%, rgba(124,58,237,0.45), transparent 60%), radial-gradient(900px 500px at 80% 70%, rgba(168,85,247,0.6), transparent 65%), linear-gradient(135deg, #0F1020 0%, #3B1D60 50%, #7C3AED 100%)",
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgba(16, 24, 40, 0.05)",

@@ -11,12 +11,13 @@ import {
   exchangePublicToken,
 } from "@/lib/actions/user.actions";
 import Image from "next/image";
-import GradientIcon from "@/components/GradientIcon";
+import LoadingButton from "@/components/LoadingButton";
 
 const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
   const router = useRouter();
 
   const [token, setToken] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getLinkToken = async () => {
@@ -30,14 +31,20 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
 
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token: string) => {
-      await exchangePublicToken({
-        publicToken: public_token,
-        user,
-      });
-
-      router.push("/");
+      setIsLoading(true);
+      try {
+        await exchangePublicToken({
+          publicToken: public_token,
+          user,
+        });
+        router.push("/");
+      } catch (error) {
+        console.error("Error exchanging token:", error);
+      } finally {
+        setIsLoading(false);
+      }
     },
-    [user]
+    [user, router]
   );
 
   const config: PlaidLinkOptions = {
@@ -72,45 +79,53 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
   return (
     <>
       {variant === "primary" ? (
-        <Button
+        <LoadingButton
           onClick={handleOpen}
           disabled={!ready}
+          isLoading={isLoading}
+          loadingText="Connecting..."
           className="plaidlink-primary"
         >
           Connect bank
-        </Button>
+        </LoadingButton>
       ) : variant === "ghost" ? (
-        <Button
+        <LoadingButton
           onClick={handleOpen}
           variant="ghost"
+          isLoading={isLoading}
+          iconSize={20}
           className="plaidlink-ghost"
         >
-          <GradientIcon
+          <Image
             src="/icons/connect-bank.svg"
-            size={20}
-            gradientCss="bg-[linear-gradient(90deg,#22D3EE_0%,#60A5FA_100%)]"
-            activeGradientCss="bg-[linear-gradient(90deg,#67E8F9_0%,#93C5FD_100%)]"
+            alt="connect bank"
+            width={20}
+            height={20}
+            className="opacity-70"
           />
           <p className="hiddenl text-[16px] font-semibold text-foreground xl:block">
             Connect bank
           </p>
-        </Button>
+        </LoadingButton>
       ) : (
-        <Button
+        <LoadingButton
           onClick={handleOpen}
           variant="outline"
+          isLoading={isLoading}
+          iconSize={20}
           className="plaidlink-default"
         >
-          <GradientIcon
+          <Image
             src="/icons/connect-bank.svg"
-            size={20}
-            gradientCss="bg-[linear-gradient(90deg,#22D3EE_0%,#60A5FA_100%)]"
-            activeGradientCss="bg-[linear-gradient(90deg,#67E8F9_0%,#93C5FD_100%)]"
+            alt="connect bank"
+            width={20}
+            height={20}
+            className="opacity-70"
           />
-          <p className="text-[16px] font-semibold sidebar-label text-accent-foreground">
+          <p className="text-[16px] font-semibold sidebar-label text-foreground ml-3">
             Connect bank
           </p>
-        </Button>
+        </LoadingButton>
       )}
       {null}
     </>

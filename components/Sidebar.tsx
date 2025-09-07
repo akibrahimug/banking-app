@@ -3,13 +3,11 @@
 import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import GradientIcon from "@/components/GradientIcon";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Footer from "@/components/Footer";
 import PlaidLink from "@/components/PlaidLink";
-import { Loader2 } from "lucide-react";
 import TextLogo from "@/components/TextLogo";
+import LoadingLink from "@/components/LoadingLink";
 const Sidebar = ({ user }: SiderbarProps) => {
   const pathname = usePathname();
 
@@ -29,24 +27,27 @@ const Sidebar = ({ user }: SiderbarProps) => {
             pathname === item.route || pathname.startsWith(`${item.route}/`);
 
           return (
-            <Link
+            <LoadingLink
               href={item.route}
               key={item.label}
+              iconSize={20}
               className={cn("sidebar-link", {
-                "bg-bank-gradient text-white": isActive,
+                "bg-primary text-primary-foreground": isActive,
               })}
             >
-              <GradientIcon
+              <Image
                 src={item.imgURL}
-                size={20}
-                active={isActive}
-                gradientCss={item.gradient}
-                activeGradientCss={item.activeGradient}
+                alt={item.label}
+                width={20}
+                height={20}
+                className={cn("", {
+                  "brightness-0 invert": isActive,
+                })}
               />
-              <p className={cn("sidebar-label", { "!text-white": isActive })}>
+              <p className={cn("sidebar-label", { "!text-primary-foreground": isActive })}>
                 {item.label}
               </p>
-            </Link>
+            </LoadingLink>
           );
         })}
 

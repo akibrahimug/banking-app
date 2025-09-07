@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Manrope, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { getLoggedInUser } from "@/lib/actions/user.actions";
+import { Suspense } from "react";
 
 const inter = Manrope({ subsets: ["latin"], variable: "--font-inter" });
 const ibmPlexSerif = Playfair_Display({

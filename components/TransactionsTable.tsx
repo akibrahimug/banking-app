@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableBody,
@@ -14,6 +16,8 @@ import {
   getTransactionStatus,
   removeSpecialCharacters,
 } from "@/lib/utils";
+import { useState } from "react";
+import TransactionDetailModal from "@/components/TransactionDetailModal";
 
 const CategoryBadge = ({ category }: CategoryBadgeProps) => {
   const { borderColor, backgroundColor, textColor, chipBackgroundColor } =
@@ -30,7 +34,21 @@ const CategoryBadge = ({ category }: CategoryBadgeProps) => {
 };
 
 const TransactionsTable = ({ transactions }: TransactionTableProps) => {
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleRowClick = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedTransaction(null);
+  };
+
   return (
+    <>
     <Table>
       <TableHeader className="bg-[#f9fafb]">
         <TableRow>
@@ -55,7 +73,8 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
               key={t.id}
               className={`${
                 isDebit || amount[0] === "-" ? "bg-[#FFFBFA]" : "bg-[#F6FEF9]"
-              } !over:bg-none !border-b-DEFAULT`}
+              } !over:bg-none !border-b-DEFAULT cursor-pointer hover:bg-muted/50 transition-colors`}
+              onClick={() => handleRowClick(t)}
             >
               <TableCell className="max-w-[250px] pl-2 pr-10">
                 <div className="flex items-center gap-3">
@@ -95,6 +114,12 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
         })}
       </TableBody>
     </Table>
+    <TransactionDetailModal 
+      isOpen={isModalOpen}
+      onClose={handleCloseModal}
+      transaction={selectedTransaction}
+    />
+    </>
   );
 };
 

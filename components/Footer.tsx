@@ -1,7 +1,6 @@
 "use client";
 import { logoutAccount } from "@/lib/actions/user.actions";
 import Image from "next/image";
-import GradientIcon from "@/components/GradientIcon";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -26,13 +25,13 @@ const Footer = ({ user, type = "desktop" }: FooterProps) => {
           {user.email}
         </p>
       </div>
-      <div className="footer_image" onClick={handleLogOut}>
-        <GradientIcon
+      <div className="footer_image cursor-pointer" onClick={handleLogOut}>
+        <Image
           src="/icons/logout.svg"
-          size={24}
+          width={24}
+          height={24}
           alt="logout"
-          gradientCss="bg-[linear-gradient(90deg,#F97316_0%,#EF4444_100%)]"
-          activeGradientCss="bg-[linear-gradient(90deg,#FDBA74_0%,#FCA5A5_100%)]"
+          className="opacity-70 hover:opacity-100 transition-opacity"
         />
       </div>
     </footer>
